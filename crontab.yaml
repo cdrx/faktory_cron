@@ -1,0 +1,22 @@
+faktory: tcp://localhost:7419
+jobs:
+  - job: test.one
+    schedule: "@every 5s"
+    args:
+      - 1
+      - 2
+    queue: default
+    priority: 5
+  - job: test.frequent
+    schedule: "@every 1s"
+    args:
+      - a
+      - b
+    queue: default
+    priority: 5
+  - job: test.two
+    schedule: 5 * * * *
+    args: []
+  - job: test.three
+    schedule: "@daily"
+    args: []
