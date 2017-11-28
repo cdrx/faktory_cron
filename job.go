@@ -10,7 +10,7 @@ type Job struct {
 	Name     string        `yaml:"job"`
 	Args     []interface{} `yaml:"args"`
 	Queue    string        `yaml:"queue"`
-	Retries  int           `yaml:"Retries"`
+	Retries  int           `yaml:"retries"`
 	Priority uint8         `yaml:"priority"`
 }
 
