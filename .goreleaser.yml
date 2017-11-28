@@ -9,13 +9,15 @@ release:
 builds:
   - binary: faktory-cron
     main: .
-    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    ldflags: -s -w -extldflags "-static" -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
     goos:
       - linux
       - darwin
       - windows
     goarch:
       - amd64
+    env:
+      - CGO_ENABLED=0
 
 archive:
   format: tar.gz
