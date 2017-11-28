@@ -6,6 +6,16 @@ release:
     name: faktory_cron
   name_template: '{{.Tag}}'
 
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - typo
+      - Merge pull request
+      - Merge branch
+      - '^refactor'
+
 builds:
   - binary: faktory-cron
     main: .
