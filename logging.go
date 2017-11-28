@@ -10,7 +10,9 @@ import (
 var log *apex.Entry
 
 func configureLogging() {
-	apex.SetLevel(apex.DebugLevel)
+	if debug {
+		apex.SetLevel(apex.DebugLevel)
+	}
 	handler := cli.New(os.Stdout)
 	handler.Padding = 0
 	apex.SetHandler(handler)

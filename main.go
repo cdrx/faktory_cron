@@ -8,6 +8,7 @@ import (
 
 var (
 	version     = "master"
+	debug       bool
 	config_path string
 	config      *Config
 	scheduler   *cron.Cron
@@ -15,6 +16,7 @@ var (
 
 func init() {
 	flag.StringVar(&config_path, "config", "./crontab.yaml", "path to the configuration file")
+	flag.BoolVar(&debug, "debug", false, "enable debug logs")
 	flag.Parse()
 }
 
@@ -31,7 +33,7 @@ func main() {
 
 	scheduler = cron.New()
 	for _, t := range config.Jobs {
-		log.Infof("Running %v every %v", t.Name, t.Schedule)
+		log.Infof("Will run job %v every %v", t.Name, t.Schedule)
 		t.AddToScheduler()
 	}
 	log.Infof("Loaded %d scheduled tasks from %v", len(config.Jobs), config_path)
