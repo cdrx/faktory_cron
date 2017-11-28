@@ -7,31 +7,29 @@ release:
   name_template: '{{.Tag}}'
 
 builds:
-- goos:
-  - linux
-  - darwin
-  - windows
-  goarch:
-  - amd64
-  main: .
-  ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
-  binary: faktory_cron
+  - binary: faktory-cron
+    main: .
+    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
 
 archive:
   format: tar.gz
   name_template: '{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   files:
-  - licence*
-  - LICENCE*
-  - license*
-  - LICENSE*
-  - readme*
-  - README*
-  - changelog*
-  - CHANGELOG*
+    - LICENCE
+    - README*
+    - CHANGELOG*
+    - crontab.yaml.sample
+  replacements:
+    darwin: macos
 
-fpm:
-  bindir: /usr/local/bin
+#fpm:
+#  bindir: /usr/local/bin
 
 snapshot:
   name_template: SNAPSHOT-{{ .Commit }}

@@ -1,0 +1,13 @@
+faktory: tcp://localhost:7419
+jobs:
+  - job: test
+    schedule: "@every 30s"
+    args:
+      - test
+  - job: test
+    schedule: 5 * * * *
+    args:
+      - 1
+      - 2
+    queue: default
+    priority: 5
