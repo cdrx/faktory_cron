@@ -28,6 +28,10 @@ archive:
   replacements:
     darwin: macos
 
+dockers:
+  - image: cdrx/faktory-cron
+    latest: true
+
 #fpm:
 #  bindir: /usr/local/bin
 
