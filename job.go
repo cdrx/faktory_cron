@@ -3,9 +3,11 @@ package main
 import (
 	faktory "github.com/contribsys/faktory/client"
 	"github.com/robfig/cron"
+	"os/exec"
 )
 
 type Job struct {
+	Type     string        `yaml:"type"`
 	Schedule string        `yaml:"schedule"`
 	Name     string        `yaml:"job"`
 	Args     []interface{} `yaml:"args"`
@@ -54,6 +56,33 @@ func (j *Job) GetFunc() cron.FuncJob {
 	}
 }
 
+func (j *Job) ExecCommand() {
+	var stringArgs []string
+
+	for _, e := range j.Args {
+		stringArgs = append(stringArgs, e.(string))
+	}
+
+	app := stringArgs[0]
+	log.Infof("Executing a %v command", app)
+	
+	cmd := exec.Command(app, stringArgs[1:]...)
+	_, err := cmd.Output()
+
+	if err != nil {
+		log.Fatalf("Error executing command: %v", err.Error())
+        return
+    }
+}
+
+
 func (j *Job) AddToScheduler() {
 	scheduler.AddFunc(j.Schedule, j.GetFunc())
+}
+
+func (j *Job) AddSimpleCronTask() {
+	task := cron.New()
+
+	task.AddFunc("*/1 * * * *", func() { j.ExecCommand() })
+	task.Start()
 }

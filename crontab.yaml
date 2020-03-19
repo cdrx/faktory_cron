@@ -1,22 +1,17 @@
 faktory: tcp://localhost:7419
 jobs:
   - job: test.one
+    type: faktory
     schedule: "@every 5s"
     args:
       - 1
       - 2
     queue: default
     priority: 5
-  - job: test.frequent
-    schedule: "@every 1s"
+  - job: test.cron
+    type: cron
+    schedule: "@every 10s"
     args:
-      - a
-      - b
-    queue: default
-    priority: 5
-  - job: test.two
-    schedule: 5 * * * *
-    args: []
-  - job: test.three
-    schedule: "@daily"
-    args: []
+      - echo
+      - Hello World
+      - from GoLang
