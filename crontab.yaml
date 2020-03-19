@@ -1,22 +1,20 @@
 faktory: tcp://localhost:7419
 jobs:
   - job: test.one
+    type: faktory
     schedule: "@every 5s"
     args:
       - 1
       - 2
     queue: default
     priority: 5
-  - job: test.frequent
-    schedule: "@every 1s"
+  - job: test.cron
+    type: cron
+    schedule: "0 0 * * *"
     args:
-      - a
-      - b
-    queue: default
-    priority: 5
-  - job: test.two
-    schedule: 5 * * * *
-    args: []
-  - job: test.three
-    schedule: "@daily"
-    args: []
+      - curl
+      - -X
+      - GET
+      - "https://geo.api.gouv.fr/communes?codePostal=69001&fields=nom,code,codesPostaux,codeDepartement,codeRegion,population&format=json&geometry=centre"
+      - -H
+      - "accept: application/json"
