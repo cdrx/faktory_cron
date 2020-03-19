@@ -16,6 +16,9 @@ type Job struct {
 	Priority uint8         `yaml:"priority"`
 }
 
+const TYPE_FAKTORY = "faktory"
+const TYPE_CRON = "cron"
+
 func (j *Job) Start() {
 	// send the task to faktory
 	if len(j.Queue) == 0 {
@@ -51,9 +54,15 @@ func (j *Job) Start() {
 }
 
 func (j *Job) GetFunc() cron.FuncJob {
-	return func() {
-		go j.Start()
-	}
+	if j.Type == TYPE_CRON {
+		return func() {
+			go j.ExecCommand()
+		}
+	} else {
+		return func() {
+			go j.Start()
+		}
+	}	
 }
 
 func (j *Job) ExecCommand() {
@@ -67,22 +76,17 @@ func (j *Job) ExecCommand() {
 	log.Infof("Executing a %v command", app)
 	
 	cmd := exec.Command(app, stringArgs[1:]...)
-	_, err := cmd.Output()
+	stdout, err := cmd.Output()
 
 	if err != nil {
 		log.Fatalf("Error executing command: %v", err.Error())
         return
     }
+
+	log.Infof(string(stdout))
 }
 
 
 func (j *Job) AddToScheduler() {
 	scheduler.AddFunc(j.Schedule, j.GetFunc())
-}
-
-func (j *Job) AddSimpleCronTask() {
-	task := cron.New()
-
-	task.AddFunc("*/1 * * * *", func() { j.ExecCommand() })
-	task.Start()
 }

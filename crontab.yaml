@@ -12,6 +12,9 @@ jobs:
     type: cron
     schedule: "@every 10s"
     args:
-      - echo
-      - Hello World
-      - from GoLang
+      - curl
+      - -X
+      - GET
+      - "https://geo.api.gouv.fr/communes?codePostal=69001&fields=nom,code,codesPostaux,codeDepartement,codeRegion,population&format=json&geometry=centre"
+      - -H
+      - "accept: application/json"
