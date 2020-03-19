@@ -10,7 +10,7 @@ jobs:
     priority: 5
   - job: test.cron
     type: cron
-    schedule: "@every 10s"
+    schedule: "0 0 * * *"
     args:
       - curl
       - -X

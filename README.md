@@ -25,7 +25,16 @@ jobs:
     retries: 1
     queue: default
     priority: 5
-
+  - job: test.cron
+    type: cron
+    schedule: "0 0 * * *"
+    args:
+      - curl
+      - -X
+      - GET
+      - "https://geo.api.gouv.fr/communes?codePostal=69001&fields=nom,code,codesPostaux,codeDepartement,codeRegion,population&format=json&geometry=centre"
+      - -H
+      - "accept: application/json"
 ```
 
 To run your jobs on these schedules, point `faktory-cron` at the file:
@@ -43,11 +52,18 @@ These are the configuration options for each job:
 | Setting | Required | Description|
 | -------- | -------- | -------- |
 | job   | ✓ | The name of the job, as registered with Faktory  |
+| type   | ✓ | Type of job: faktory or cron  |
 | schedule  | ✓ | See below  |
 | args  | ✓ | A list of arguments to send to the job |
 | retries  | ✗ | Number of times Faktory will retry the job (if it fails) |
 | queue  | ✗ | The queue in which this job should be placed. Will be placed in the default queue if not supplied. |
 | priority  | ✗ | Can be between 1 and 9. Defaults to 5, jobs with a higher priority will skip the queue. |
+
+#### Cron type
+
+Cron type allows you to exec simple shell commands without using Faktory.
+
+First job argument is the `command`, the next job arguments are the command arguments.
 
 #### Cron syntax
 
