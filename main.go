@@ -33,7 +33,7 @@ func main() {
 
 	scheduler = cron.New()
 	for _, t := range config.Jobs {
-		log.Infof("Will run a %v job %v every %v", t.Type, t.Name, t.Schedule)
+		log.Infof("Will run %v job (%v) every %v", t.Name, t.Type, t.Schedule)
 		t.AddToScheduler()
 	}
 	log.Infof("Loaded %d scheduled tasks from %v", len(config.Jobs), config_path)

@@ -73,17 +73,15 @@ func (j *Job) ExecCommand() {
 	}
 
 	app := stringArgs[0]
-	log.Infof("Executing a %v command", app)
+	log.Infof("Executing a %v command for %v job", app, j.Name)
 	
 	cmd := exec.Command(app, stringArgs[1:]...)
-	stdout, err := cmd.Output()
+	_, err := cmd.Output()
 
 	if err != nil {
 		log.Fatalf("Error executing command: %v", err.Error())
         return
     }
-
-	log.Infof(string(stdout))
 }
 
 
