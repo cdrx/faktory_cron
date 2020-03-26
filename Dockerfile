@@ -12,6 +12,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflag
 # IMAGE BUILD
 FROM alpine:latest
 
+RUN apk update && apk add --no-cache curl
+
 COPY --from=builder /go/bin/faktory-cron /faktory-cron
 
 ENTRYPOINT ["/faktory-cron", "-config", "crontab.yaml"]
