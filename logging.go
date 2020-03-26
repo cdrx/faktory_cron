@@ -2,19 +2,17 @@ package main
 
 import (
 	"os"
+	"time"
 
 	apex "github.com/apex/log"
-	"github.com/apex/log/handlers/cli"
+	"github.com/apex/log/handlers/text"
 )
 
 var log *apex.Entry
 
 func configureLogging() {
-	if debug {
-		apex.SetLevel(apex.DebugLevel)
-	}
-	handler := cli.New(os.Stdout)
-	handler.Padding = 0
-	apex.SetHandler(handler)
-	log = apex.WithFields(apex.Fields{})
+	apex.SetHandler(text.New(os.Stderr))
+	log = apex.WithFields(apex.Fields{
+		"time": time.Now().Format(time.RFC3339),
+	})
 }

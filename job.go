@@ -3,9 +3,11 @@ package main
 import (
 	faktory "github.com/contribsys/faktory/client"
 	"github.com/robfig/cron"
+	"os/exec"
 )
 
 type Job struct {
+	Type     string        `yaml:"type"`
 	Schedule string        `yaml:"schedule"`
 	Name     string        `yaml:"job"`
 	Args     []interface{} `yaml:"args"`
@@ -13,6 +15,9 @@ type Job struct {
 	Retries  int           `yaml:"retries"`
 	Priority uint8         `yaml:"priority"`
 }
+
+const TYPE_FAKTORY = "faktory"
+const TYPE_CRON = "cron"
 
 func (j *Job) Start() {
 	// send the task to faktory
@@ -49,10 +54,36 @@ func (j *Job) Start() {
 }
 
 func (j *Job) GetFunc() cron.FuncJob {
-	return func() {
-		go j.Start()
-	}
+	if j.Type == TYPE_CRON {
+		return func() {
+			go j.ExecCommand()
+		}
+	} else {
+		return func() {
+			go j.Start()
+		}
+	}	
 }
+
+func (j *Job) ExecCommand() {
+	var stringArgs []string
+
+	for _, e := range j.Args {
+		stringArgs = append(stringArgs, e.(string))
+	}
+
+	app := stringArgs[0]
+	log.Infof("Executing a %v command for %v job", app, j.Name)
+	
+	cmd := exec.Command(app, stringArgs[1:]...)
+	_, err := cmd.Output()
+
+	if err != nil {
+		log.Fatalf("Error executing command: %v", err.Error())
+        return
+    }
+}
+
 
 func (j *Job) AddToScheduler() {
 	scheduler.AddFunc(j.Schedule, j.GetFunc())
